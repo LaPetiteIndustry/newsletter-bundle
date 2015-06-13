@@ -1,7 +1,7 @@
 {
-  "name": "lpi-lab/kernel-bundle",
+  "name": "lpi-lab/newsletter-bundle",
   "type": "symfony-bundle",
-  "description": "Symfony LpiKernelBundle",
+  "description": "Symfony LpiNewsletterBundle",
   "keywords": [],
   "homepage": "http://www.lapetiteindustry.com",
   "license": "MIT",
@@ -14,6 +14,10 @@
     {
       "name": "LPI - David",
       "email": "david@lapetiteindustry.com"
+    },
+    {
+      "name": "LPI - Jeremy",
+      "email": "jeremy@lapetiteindustry.com"
     }
   ],
   "require": {

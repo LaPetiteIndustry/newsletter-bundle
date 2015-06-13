@@ -8,8 +8,8 @@
     <id name="id" type="integer">
         <generator strategy="AUTO" />
     </id>
-    <field name="firstName" column="firstName" type="string" nullable="false" length="255"/>
-    <field name="lastName" column="lastName" type="string" nullable="false" length="255"/>
+    <field name="firstName" column="firstName" type="string" nullable="true" length="255"/>
+    <field name="lastName" column="lastName" type="string" nullable="true" length="255"/>
     <field name="department" column="department" type="string" nullable="false" length="255"/>
     <field name="emailAddress" column="emailAddress" type="string" nullable="false" unique="true" length="255"/>
 

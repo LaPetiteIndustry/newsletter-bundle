@@ -5,6 +5,6 @@
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="lpi_newsletter_registration_ajax" path="/registration">
-        <default key="_controller">LpiNewsletterBundle:Default:index</default>
+        <default key="_controller">lpi.newsletter.service:submitFormAction</default>
     </route>
 </routes>

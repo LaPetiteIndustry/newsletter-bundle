@@ -13,7 +13,13 @@
     </parameters>
 
     <services>
-        
+
+        <service id="lpi.newsletter.service" class="Lpi\NewsletterBundle\Controller\DefaultController">
+
+            <argument type="service" id="form.factory"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
 
         <service id="lpi.newsletter.service.register_customer" class="Lpi\NewsletterBundle\Block\RegisterCustomer">
             <tag name="sonata.block" />
@@ -21,6 +27,7 @@
             <argument type="service" id="templating" />
             <argument type="service" id="form.factory" />
             <argument type="service" id="router" />
+            <argument type="service" id="lpi.newsletter.service" />
         </service>
 
         <service id="lpi.mailjet_client" class="Lpi\NewsletterBundle\Integration\Client">

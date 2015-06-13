@@ -1,6 +1,7 @@
 <?php
 namespace Lpi\NewsletterBundle\Block;
 
+use Lpi\NewsletterBundle\Controller\DefaultController;
 use Lpi\NewsletterBundle\Form\CustomerType;
 use Sonata\BlockBundle\Block\BlockServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -26,38 +27,23 @@ class RegisterCustomer extends BaseBlockService implements BlockServiceInterface
      * @var Router
      */
     private $router;
+    /**
+     * @var DefaultController
+     */
+    private $service;
 
-    public function __construct($name, EngineInterface $templating, FormFactory $formFactory, Router $router)
+    public function __construct($name, EngineInterface $templating, FormFactory $formFactory, Router $router, DefaultController $service)
     {
         parent::__construct($name, $templating);
-        $this->formFactory = $formFactory;
-        $this->router = $router;
-    }
-
-
-    public function setDefaultSettings(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'template' => 'LpiNewsletterBundle:Block:register_customer.html.twig',
-        ));
-
-        $resolver->setOptional(['hideIdentity']);
+        $this->service = $service;
     }
 
     public function execute(BlockContextInterface $blockContext, Response $response = null)
     {
-        $customerType = new CustomerType();
-
-
-        $form = $this->formFactory->createBuilder($customerType, [], []);
-        $form->setAction($this->router->generate("lpi_newsletter_registration_ajax"));
-
-        $settings = $blockContext->getSettings();
-
-        return $this->renderResponse($blockContext->getTemplate(), array(
-            'block'     => $blockContext->getBlock(),
-            'settings'  => $settings,
-            'form' => $form->getForm()->createView()
+        return $this->renderResponse('LpiNewsletterBundle:Block:register_customer.html.twig', array(
+            'form' => $this->service->getFormView()
         ), $response);
     }
+
+
 }

@@ -38,9 +38,10 @@ class RegisterCustomer extends BaseBlockService implements BlockServiceInterface
     public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-
             'template' => 'LpiNewsletterBundle:Block:register_customer.html.twig',
         ));
+
+        $resolver->setOptional(['hideIdentity']);
     }
 
     public function execute(BlockContextInterface $blockContext, Response $response = null)
@@ -50,9 +51,7 @@ class RegisterCustomer extends BaseBlockService implements BlockServiceInterface
 
         $form = $this->formFactory->createBuilder($customerType, [], []);
         $form->setAction($this->router->generate("lpi_newsletter_registration_ajax"));
-        //$form->add("J'y crois !",'submit');
 
-        // merge settings
         $settings = $blockContext->getSettings();
 
         return $this->renderResponse($blockContext->getTemplate(), array(

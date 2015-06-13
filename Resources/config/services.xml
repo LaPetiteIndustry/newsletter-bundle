@@ -13,6 +13,8 @@
     </parameters>
 
     <services>
+        
+
         <service id="lpi.newsletter.service.register_customer" class="Lpi\NewsletterBundle\Block\RegisterCustomer">
             <tag name="sonata.block" />
             <argument>lpi.newsletter.service.register_customer</argument>

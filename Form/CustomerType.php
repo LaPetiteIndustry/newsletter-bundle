@@ -5,6 +5,7 @@ use Lpi\NewsletterBundle\Form\Constraints\Postcode;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -27,6 +28,13 @@ class CustomerType extends AbstractType
             ->add('firstName', 'text', array('attr' => array('placeholder' => 'Prénom'), 'label' => false))
             ->add('department', 'text', array('attr' => array('placeholder' => 'Code Postal'), 'label' => false, 'constraints' => [new Postcode()]))
             ->add('emailAddress', 'email', array('attr' => array('placeholder' => 'Email'), 'label' => false, 'constraints' => [new Email()]));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Lpi\NewsletterBundle\Entity\Customer'
+        ));
     }
 
     public function getName()

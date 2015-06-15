@@ -50,6 +50,7 @@ class Mailjet
      */
     public function registerCustomer(Customer $customer)
     {
+        return;
         $params = ['body' => ['Email' => $customer->getEmailAddress()]];
         $req = $this->client->createRequest('POST', 'contact', $params);
 
@@ -98,6 +99,7 @@ class Mailjet
      */
     public function updateCustomer(Customer $customer)
     {
+        return;
         try {
             $this->logger->log(Logger::INFO, sprintf('[UPDATE] - Get ID for customer %s', $customer->getEmailAddress()));
             $req = $this->client->createRequest('GET', 'contact/'.$customer->getEmailAddress(), []);

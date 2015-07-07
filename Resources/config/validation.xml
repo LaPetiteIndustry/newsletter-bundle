@@ -6,7 +6,7 @@
     <class name="Lpi\NewsletterBundle\Entity\Customer">
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
             <option name="fields">emailAddress</option>
-            <option name="message">Cet adresse email est déjà inscrite</option>
+            <option name="message">Cette adresse email est déjà inscrite</option>
 
         </constraint>
         <property name="emailAddress">

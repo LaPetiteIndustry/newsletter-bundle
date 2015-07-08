@@ -33,7 +33,7 @@
     "phpunit/phpunit": "4.8.*@dev"
   },
   "autoload": {
-    "psr-4": {"Lpi\\NewsletterBundle\\": ""}
+    "psr-4": {"Lpi\\NewsletterBundle\\": "src"}
   },
   "extra": {
     "branch-alias": {

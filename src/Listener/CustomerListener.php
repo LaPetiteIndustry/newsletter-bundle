@@ -11,42 +11,63 @@ namespace Lpi\NewsletterBundle\Listener;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Lpi\NewsletterBundle\Entity\Customer;
 use Lpi\NewsletterBundle\Integration\Mailjet;
+use Lpi\NewsletterBundle\Integration\Mailjet\Domain\ContactMetadata;
 use Monolog\Logger;
 
-class CustomerListener {
+class CustomerListener
+{
     protected $logger;
     protected $mailjet;
+    protected $contactList;
 
-    public function __construct(Logger $logger, Mailjet $mailjet) {
-        $this->logger = $logger;
+    public function __construct(Mailjet\MailjetService $mailjet, $listName, $listId)
+    {
         $this->mailjet = $mailjet;
+        $this->contactList = new Mailjet\Domain\ContactList($listName);
+        $this->contactList->setID($listId);
     }
 
-    public function postPersist(LifecycleEventArgs $args) {
+    public function postPersist(LifecycleEventArgs $args)
+    {
         $entity = $this->checkArgs($args);
-        if (!$entity) {
-            return;
+
+        if ($entity instanceof Customer) {
+
+            $contact = new Mailjet\Domain\Contact($entity->getEmailAddress());
+            $this->mailjet->createContact($contact);
+            $this->mailjet->registerContactToContactList($contact, $this->contactList);
+
+            $metatadas = [
+                ['key' => ContactMetadata::createStringMetadata("cp"), 'value' => $entity->getDepartment()],
+                ['key' => ContactMetadata::createStringMetadata("nom"), 'value' => $entity->getLastName()],
+                ['key' => ContactMetadata::createStringMetadata("prénom"), 'value' => $entity->getFirstName()]
+            ];
+            
+            $this->mailjet->updateContact($contact, $metatadas);
         }
-        $res = $this->mailjet->registerCustomer($entity);
-        if (is_array($res)) {
-            $res = implode(', ', $res);
-        }
-        $this->logger->log(Logger::INFO, $res);
+
     }
 
-    public function postUpdate(LifecycleEventArgs $args) {
+    public function postUpdate(LifecycleEventArgs $args)
+    {
         $entity = $this->checkArgs($args);
-        if (!$entity) {
-            return;
+
+        if ($entity instanceof Customer) {
+
+            $contact = new Mailjet\Domain\Contact($entity->getEmailAddress());
+
+            $metatadas = [
+                ['key' => ContactMetadata::createStringMetadata("cp"), 'value' => $entity->getDepartment()],
+                ['key' => ContactMetadata::createStringMetadata("nom"), 'value' => $entity->getLastName()],
+                ['key' => ContactMetadata::createStringMetadata("prénom"), 'value' => $entity->getFirstName()]
+            ];
+
+            $this->mailjet->updateContact($contact, $metatadas);
         }
-        $res = $this->mailjet->registerCustomer($entity);
-        if (is_array($res)) {
-            $res = implode(', ', $res);
-        }
-        $this->logger->log(Logger::INFO, $res);
     }
 
-    protected function checkArgs(LifecycleEventArgs $args) {
+    protected function checkArgs(LifecycleEventArgs $args)
+    {
         $entity = $args->getObject();
 
         if ($entity instanceof Customer) {

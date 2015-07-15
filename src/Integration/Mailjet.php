@@ -5,6 +5,7 @@ namespace Lpi\NewsletterBundle\Integration;
 use GuzzleHttp\Client;
 use GuzzleHttp\Event\EndEvent;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request;
 use Lpi\NewsletterBundle\Model\Customer;
 use Symfony\Bridge\Monolog\Logger;
 
@@ -50,9 +51,7 @@ class Mailjet
      */
     public function registerCustomer(Customer $customer)
     {
-        return;
-        $params = ['body' => ['Email' => $customer->getEmailAddress()]];
-        $req = $this->client->createRequest('POST', 'contact', $params);
+        $req = new Request('POST', 'contact', ['Content-Type' => 'application/json'], json_encode(['Email'=>$customer->getEmailAddress()]));
 
         $this->logger->log(Logger::INFO, $req->__toString());
 
@@ -99,10 +98,13 @@ class Mailjet
      */
     public function updateCustomer(Customer $customer)
     {
-        return;
         try {
             $this->logger->log(Logger::INFO, sprintf('[UPDATE] - Get ID for customer %s', $customer->getEmailAddress()));
             $req = $this->client->createRequest('GET', 'contact/'.$customer->getEmailAddress(), []);
+
+            $req = new Request('GET', 'contact/'.$customer->getEmailAddress(), ['Content-Type' => 'application/json']);
+
+
             $this->logger->log(Logger::INFO, $req->__toString());
 
             $req->getEmitter()->on('end', function(EndEvent $e) use ($customer){

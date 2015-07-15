@@ -9,6 +9,6 @@
 namespace Lpi\NewsletterBundle\Integration\Mailjet;
 
 
-class ContactNotFoundException extends \Exception {
+class ContactListNotFoundException extends \Exception {
 
 }

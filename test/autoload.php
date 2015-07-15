@@ -7,15 +7,21 @@ $files = array(
 );
 
 $autoload = false;
+
 foreach ($files as $file) {
     if (is_file($file)) {
         $autoload = include_once $file;
-
         break;
     }
 }
 
-$autoload->addPsr4('Lpi\\KernelBundle\\', __DIR__.'/../..');
+// Bootstrap the JMS custom annotations for Object to Json mapping
+\Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+    'JMS\Serializer\Annotation',
+    dirname(__DIR__).'/vendor/jms/serializer/src'
+);
+
+$autoload->addPsr4('Lpi\\NewsletterBundle\\', __DIR__.'/../..');
 
 if (!$autoload) {
     die('Unable to find autoload.php file, please use composer to load dependencies:

@@ -1,13 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: david
- * Date: 16/04/2015
- * Time: 16:17
- */
-
-namespace Lpi\NewsletterBundle\Test;
-
 
 use Lpi\NewsletterBundle\Form\Constraints\Utils;
 

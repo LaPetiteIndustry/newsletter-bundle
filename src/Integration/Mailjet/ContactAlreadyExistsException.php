@@ -9,6 +9,6 @@
 namespace Lpi\NewsletterBundle\Integration\Mailjet;
 
 
-class ContactAlreadyExistsException {
+class ContactAlreadyExistsException  extends \Exception{
 
 }

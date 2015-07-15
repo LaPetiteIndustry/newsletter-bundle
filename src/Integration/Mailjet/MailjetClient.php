@@ -1,11 +1,107 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: david
- * Date: 08/07/2015
- * Time: 13:07
- */
 
-class MailjetClient {
+namespace Lpi\NewsletterBundle\Integration\Mailjet;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Request;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
+use Lpi\NewsletterBundle\Integration\Mailjet\Domain\Contact;
+use Lpi\NewsletterBundle\Integration\Mailjet\Domain\ListRecipient;
+use Monolog\Logger;
+
+class MailjetClient extends GuzzleClient
+{
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct($key, $secret, Logger $logger)
+    {
+        parent::__construct(['base_uri' => 'https://api.mailjet.com/v3/REST/', 'auth' => [$key, $secret]]);
+        $this->logger = $logger;
+    }
+
+    public function getContact($email)
+    {
+        $req = new Request('GET', 'contact/' . $email);
+        try {
+            $response = $this->send($req);
+        } catch (\GuzzleHttp\Exception\ClientException $exception) {
+
+            switch ($exception->getResponse()->getStatusCode()) {
+                case 404:
+                    throw new ContactNotFoundException('Unable to find contact ' . $email);
+                    break;
+
+                default:
+                    throw new ContactNotFoundException('Unable to find contact ' . $email);
+                    break;
+            }
+
+        }
+
+        return $response->getBody()->getContents();
+    }
+
+
+    public function getContactLists()
+    {
+        $req = new Request('GET', 'contactslist');
+        $response = $this->send($req);
+        return $response->getBody()->getContents();
+    }
+
+    public function registerRecipientToContactList(ListRecipient $listRecipient)
+    {
+        try {
+            $req = new Request('POST', 'listrecipient', ['Content-Type' => 'application/json'], $listRecipient->payload());
+            $this->send($req);
+        } catch (\GuzzleHttp\Exception\ClientException $exception) {
+            $this->logger->error($exception->getMessage() . ' - Unable to register ' . $listRecipient->getContactID() . ' to ' . $listRecipient->getListID() . ' Already registered ?');
+            throw new UnableToRegisterEmailToContactList(json_encode($listRecipient));
+        }
+        return true;
+    }
+
+    public function updateMetadata($body)
+    {
+        $this->logger->notice('Trying to create metatdata');
+        $req = new Request('POST', 'contactdata', ['Content-Type' => 'application/json'], $body);
+        $this->send($req);
+        return true;
+    }
+
+    public function getListRecipients()
+    {
+        $req = new Request('GET', 'listrecipient', ['Content-Type' => 'application/json']);
+        $response = $this->send($req);
+        return $response->getBody()->getContents();
+    }
+
+    public function getContactList($getId)
+    {
+
+        $req = new Request('GET', 'contactslist/' . $getId);
+
+        try {
+            $response = $this->send($req);
+        } catch (\GuzzleHttp\Exception\ClientException $exception) {
+
+            switch ($exception->getResponse()->getStatusCode()) {
+                case 404:
+                    throw new ContactListNotFoundException('Unable to find contact list ' . $getId);
+                    break;
+
+                default:
+                    throw $exception;
+                    break;
+            }
+
+        }
+
+        return $response->getBody()->getContents();
+
+    }
 }

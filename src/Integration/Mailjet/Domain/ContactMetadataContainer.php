@@ -4,7 +4,7 @@ namespace Lpi\NewsletterBundle\Integration\Mailjet\Domain;
 
 use JMS\Serializer\Annotation\Type;
 
-class ContactListContainer{
+class ContactMetadataContainer{
 
     /**
      * @Type("integer")
@@ -12,7 +12,7 @@ class ContactListContainer{
     private $Count;
 
     /**
-     * @Type("ArrayCollection<Lpi\NewsletterBundle\Integration\Mailjet\Domain\ContactList>")
+     * @Type("ArrayCollection<Lpi\NewsletterBundle\Integration\Mailjet\Domain\ContactMetadata>")
      */
     private $Data;
 

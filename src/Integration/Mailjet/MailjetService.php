@@ -80,11 +80,11 @@ class MailjetService
     {
         $serializer = \JMS\Serializer\SerializerBuilder::create()->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())->build();
 
-        $body = $this->client->getContact($contact->getEmail());
-        $contact = $serializer->deserialize($body, 'Lpi\NewsletterBundle\Integration\Mailjet\Domain\ContactContainer', 'json')->getData()->first();
 
 
         try {
+            $body = $this->client->getContact($contact->getEmail());
+            $contact = $serializer->deserialize($body, 'Lpi\NewsletterBundle\Integration\Mailjet\Domain\ContactContainer', 'json')->getData()->first();
             $data = $this->client->getContactList($list->getId());
             $list =  $serializer->deserialize($data, 'Lpi\NewsletterBundle\Integration\Mailjet\Domain\ContactListContainer', 'json')->getData()->first();
 
@@ -95,6 +95,9 @@ class MailjetService
 
         } catch (ContactListNotFoundException $exception) {
             $this->logger->notice("Unable to register contact " . $contact->getEmail() . " Contact List not found ");
+            return false;
+        } catch (ContactNotFoundException $exception) {
+            $this->logger->notice("Unable to load contact " . $contact->getEmail() . " Contact not found ");
             return false;
         } catch (UnableToRegisterEmailToContactList $exception) {
             $this->logger->notice("Unable to register contact " . $contact->getEmail() . " to " . $list->getName());

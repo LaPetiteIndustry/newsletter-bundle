@@ -37,8 +37,6 @@ class LpiNewsletterExtension extends Extension
         }
         if (isset($config['mailjet']) && isset($config['mailjet']['list_id'])) {
             $container->setParameter('list_id', $config['mailjet']['list_id']);
-        } else {
-            $container->setParameter('list_id', '');
         }
     }
 }

@@ -30,15 +30,16 @@
             <argument type="service" id="lpi.newsletter.service" />
         </service>
 
-        <service id="lpi.mailjet_client" class="Lpi\NewsletterBundle\Integration\Client">
-            <argument>%mailjet_params%</argument>
+        <service id="lpi.mailjet.client" class="Lpi\NewsletterBundle\Integration\Mailjet\MailjetClient">
+            <argument>%mailjet_key%</argument>
+            <argument>%mailjet_secret%</argument>
+            <argument type="service" id="logger"/>
         </service>
 
-        <service id="lpi.mailjet" class="Lpi\NewsletterBundle\Integration\Mailjet">
+        <service id="lpi.mailjet.service" class="Lpi\NewsletterBundle\Integration\Mailjet\MailjetService">
             <tag name="monolog.logger" channel="newsletter"/>
-            <argument type="service" id="lpi.mailjet_client"/>
+            <argument type="service" id="lpi.mailjet.client"/>
             <argument type="service" id="logger"/>
-            <argument>%mailjet_list_id%</argument>
         </service>
 
         <service id="lpi.newsletter_logger" class="Symfony\Bridge\Monolog\Logger">
@@ -50,15 +51,17 @@
         <service id="lpi.listener_newsletter_persist" class="Lpi\NewsletterBundle\Listener\CustomerListener">
             <tag name="doctrine.event_listener" event="postPersist"/>
             <tag name="monolog.logger" channel="newsletter"/>
-            <argument type="service" id="logger"/>
-            <argument type="service" id="lpi.mailjet"/>
+            <argument type="service" id="lpi.mailjet.service"/>
+            <argument>%mailjet_list%</argument>
+            <argument>%mailjet_list_id%</argument>
         </service>
 
         <service id="lpi.listener_newsletter_update" class="Lpi\NewsletterBundle\Listener\CustomerListener">
             <tag name="doctrine.event_listener" event="postUpdate"/>
             <tag name="monolog.logger" channel="newsletter"/>
-            <argument type="service" id="logger"/>
-            <argument type="service" id="lpi.mailjet"/>
+            <argument type="service" id="lpi.mailjet.service"/>
+            <argument>%mailjet_list%</argument>
+            <argument>%mailjet_list_id%</argument>
         </service>
 
     </services>

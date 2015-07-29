@@ -54,7 +54,7 @@ class DefaultController
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
 
-            return new Response('Merci pour votre engagement', 201, ['Content-Type' => 'plain/text; charset=utf-8']);
+            return new Response('Merci pour votre inscription', 201, ['Content-Type' => 'plain/text; charset=utf-8']);
         }
         $errorMsg = '';
         foreach ($form->getErrors(true, true) as $errors) {

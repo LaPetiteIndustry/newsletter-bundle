@@ -26,7 +26,7 @@ class CustomerType extends AbstractType
         $builder
             ->add('lastName', 'text', array('attr' => array('placeholder' => 'Nom'), 'label' => false))
             ->add('firstName', 'text', array('attr' => array('placeholder' => 'Prénom'), 'label' => false))
-            ->add('department', 'text', array('attr' => array('placeholder' => 'Code Postal'), 'label' => false, 'constraints' => [new Postcode()]))
+            ->add('department', 'text', array('required'=> false, 'attr' => array('placeholder' => 'Code Postal'), 'label' => false))
             ->add('emailAddress', 'email', array('attr' => array('placeholder' => 'Email'), 'label' => false, 'constraints' => [new Email()]));
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
         <parameter key="mailjet_params" type="collection">
@@ -22,24 +22,12 @@
         </service>
 
         <service id="lpi.newsletter.service.register_customer" class="Lpi\NewsletterBundle\Block\RegisterCustomer">
-            <tag name="sonata.block" />
+            <tag name="sonata.block"/>
             <argument>lpi.newsletter.service.register_customer</argument>
-            <argument type="service" id="templating" />
-            <argument type="service" id="form.factory" />
-            <argument type="service" id="router" />
-            <argument type="service" id="lpi.newsletter.service" />
-        </service>
-
-        <service id="lpi.mailjet.client" class="Lpi\NewsletterBundle\Integration\Mailjet\MailjetClient">
-            <argument>%mailjet_key%</argument>
-            <argument>%mailjet_secret%</argument>
-            <argument type="service" id="logger"/>
-        </service>
-
-        <service id="lpi.mailjet.service" class="Lpi\NewsletterBundle\Integration\Mailjet\MailjetService">
-            <tag name="monolog.logger" channel="newsletter"/>
-            <argument type="service" id="lpi.mailjet.client"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="templating"/>
+            <argument type="service" id="form.factory"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="lpi.newsletter.service"/>
         </service>
 
         <service id="lpi.newsletter_logger" class="Symfony\Bridge\Monolog\Logger">
@@ -48,21 +36,6 @@
             <argument type="service" id="monolog.handler.newsletter"/>
         </service>
 
-        <service id="lpi.listener_newsletter_persist" class="Lpi\NewsletterBundle\Listener\CustomerListener">
-            <tag name="doctrine.event_listener" event="postPersist"/>
-            <tag name="monolog.logger" channel="newsletter"/>
-            <argument type="service" id="lpi.mailjet.service"/>
-            <argument>%mailjet_list%</argument>
-            <argument>%mailjet_list_id%</argument>
-        </service>
-
-        <service id="lpi.listener_newsletter_update" class="Lpi\NewsletterBundle\Listener\CustomerListener">
-            <tag name="doctrine.event_listener" event="postUpdate"/>
-            <tag name="monolog.logger" channel="newsletter"/>
-            <argument type="service" id="lpi.mailjet.service"/>
-            <argument>%mailjet_list%</argument>
-            <argument>%mailjet_list_id%</argument>
-        </service>
 
     </services>
 

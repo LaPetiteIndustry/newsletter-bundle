@@ -5,22 +5,17 @@ namespace Lpi\NewsletterBundle\Integration\Mailjet;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
-use Lpi\NewsletterBundle\Integration\Mailjet\Domain\Contact;
+use Lpi\NewsletterBundle\Integration\ClientIntegration;
 use Lpi\NewsletterBundle\Integration\Mailjet\Domain\ListRecipient;
+use Lpi\NewsletterBundle\Integration\UserPasswordAuthentication;
 use Monolog\Logger;
 
-class MailjetClient extends GuzzleClient
+class MailjetClient extends ClientIntegration
 {
 
-    /**
-     * @var Logger
-     */
-    private $logger;
-
-    public function __construct($key, $secret, Logger $logger)
+    public function __construct(UserPasswordAuthentication $auth, Logger $logger)
     {
-        parent::__construct(['base_uri' => 'https://api.mailjet.com/v3/REST/', 'auth' => [$key, $secret]]);
-        $this->logger = $logger;
+        parent::__construct('https://api.mailjet.com/v3/REST/', $auth->getUser(), $auth->getPassword(), $logger);
     }
 
     public function getContact($email)
